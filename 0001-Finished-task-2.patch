@@ -1,0 +1,71 @@
+From fce5202e37c432cb24eafa9db6d1f4775a474637 Mon Sep 17 00:00:00 2001
+From: mwang840 <maxwang@udel.edu>
+Date: Mon, 15 Jul 2024 15:47:50 -0400
+Subject: [PATCH] Finished task 2
+
+---
+ src/App.tsx   | 30 ++++++++++++++----------------
+ src/Graph.tsx |  5 +++++
+ 2 files changed, 19 insertions(+), 16 deletions(-)
+
+diff --git a/src/App.tsx b/src/App.tsx
+index d281a69..733ca80 100755
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -41,23 +41,21 @@ class App extends Component<{}, IState> {
+    * Get new data from server and update the state with the new data
+    */
+   getDataFromServer() {
+-    DataStreamer.getData((serverResponds: ServerRespond[]) => {
+-      // Update the state by creating a new array of data that consists of
+-      // Previous data in the state and the new data from server
+-      let x = 0;
+-      const interval = setInterval(()=>{
+-        DataStreamer.getData((serverResponds: ServerRespond[])=>{
+-          this.setState({
+-            data: serverResponds,
+-            showGraph: true,
+-          });
++    let x = 0;
++    const interval = setInterval(() => {
++      DataStreamer.getData((serverResponds: ServerRespond[]) => {
++        // Update the state by creating a new array of data that consists of
++        // Previous data in the state and the new data from server
++        this.setState({ 
++          data: serverResponds,
++          showGraph: true,
+         });
+-        x++;
+-        if (x > 1000){
+-          clearInterval(interval)
+-        }
+-      }, 100)
+-    });
++      });
++      x++;
++      if ( x > 1000 ) {
++        clearInterval(interval);
++      }
++    }, 100);
+   }
+ 
+   /**
+diff --git a/src/Graph.tsx b/src/Graph.tsx
+index 757903a..bb00b39 100644
+--- a/src/Graph.tsx
++++ b/src/Graph.tsx
+@@ -49,6 +49,11 @@ class Graph extends Component<IProps, {}> {
+ 
+       // Add more Perspective configurations here.
+       elem.load(this.table);
++      elem.setAttribute('view', 'y_line');
++      elem.setAttribute('colum-pivots', '["stock"]');
++      elem.setAttribute('row-pivots', '["timestamp"]');
++      elem.setAttribute("columns", '["top_ask_price"]');
++      elem.setAttribute("aggregates", '{"stock": "distinct count", "top_ask_price":"avg", "top_bid_price":"avg", "timestamp": "distinct count"}');
+     }
+   }
+ 
+-- 
+2.37.3.windows.1
+
